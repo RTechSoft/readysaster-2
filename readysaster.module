@@ -1,0 +1,86 @@
+<?php
+// Include all neccessary files
+require_once(drupal_get_path('module', 'readysaster') . '/readysaster_main.inc');
+require_once(drupal_get_path('module', 'readysaster') . '/readysaster_form.inc');
+
+require_once(drupal_get_path('module', 'readysaster') . '/lib/pointLocation.inc');
+require_once(drupal_get_path('module', 'readysaster') . '/lib/smsglobal.inc');
+
+/**
+ * Implements hook_theme().
+ */
+function readysaster_theme(){
+	return array(
+		'view_home' => array(
+			'template' => 'templates/home-page', 
+			'variable' => array('user_profile' => NULL),
+		),
+ 		'view_register' => array(
+			'template' => 'templates/register-page', 
+			'variable' => array('user_register_profile' => NULL),
+		),
+ 		'view_hazard_form' => array(
+			'template' => 'templates/hazard-form-page', 
+			'variable' => array('user_register_profile' => NULL),
+		),
+        'readysaster_page' =>  array(
+            'template' => 'templates/page',
+            'render element' => 'page'
+        ),
+    );
+}
+
+function readysaster_menu(){
+	$items = array();
+	$items['readysaster/home'] = array(
+		'page callback' => 'readysaster_home_page',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,	
+	);
+	$items['readysaster/register'] = array(
+		'page callback' => 'readysaster_register_page',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,	
+	);
+	$items['readysaster/hazard-form'] = array(
+		'page callback' => 'readysaster_hazard_input_page',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,	
+	);
+	$items['readysaster/get-user-info'] = array(
+		'title' => t('Ajax getting user information.'),
+		'page callback' => 'readysaster_get_user_info',
+		'access callback' => TRUE,
+		'access arguments' => array('access content'),
+		'type' => MENU_NORMAL_ITEM,
+	);
+	$items['readysaster/update-user-last-location/%/%/%/%'] = array(
+		'title' => t('Check and update user last location.'),
+		'page callback' => 'readysaster_update_user_last_location',
+		'page arguments' => array(2,3,4,5),
+		'access callback' => TRUE,
+		'access arguments' => array('access content'),
+		'type' => MENU_NORMAL_ITEM,
+	);
+	return $items;
+}
+
+/**
+*Implemenation of hook_action_info().
+*/
+function readysaster_action_info() {
+    return array(
+            'readysaster_hazard_instersect_entity' => array(
+                'type' => 'system',
+                'label' => t('Check for affected Entity'),
+                'configurable' => FALSE,
+                'triggers' => array('node_insert', 'node_update'),
+            ),
+            'readysaster_entity_instersect_hazard' => array(
+                'type' => 'system',
+                'label' => t('Cross check user on hazards list'),
+                'configurable' => FALSE,
+                'triggers' => array('node_insert', 'node_update'),
+            ),
+        );
+}

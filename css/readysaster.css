@@ -1,0 +1,18 @@
+#user-view-port{
+    height: 100px;
+    width: 500px;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background: white;
+}
+
+#content .section, .sidebar .section{
+    padding: 0px !important;
+    margin: 0px;
+}
+
+#content .content{
+    padding: 0px;
+    margin: 0px;
+}
